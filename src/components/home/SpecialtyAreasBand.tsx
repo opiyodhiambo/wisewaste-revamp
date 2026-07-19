@@ -16,7 +16,7 @@ import worker1 from "../../assets/worker1.jpg";
 import vehicle36 from "../../assets/vehicle36.jpeg";
 
 const GOLD = "#B38C00";
-const GREEN = "#1B6B1B";
+
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 

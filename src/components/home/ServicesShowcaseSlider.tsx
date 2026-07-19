@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../ui/Container";
 import {
   ArrowUpRight,

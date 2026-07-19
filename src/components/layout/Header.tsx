@@ -22,7 +22,7 @@ type NavItem = {
 
 const GREEN = "#1B6B1B";
 const GREEN_DARK = "#165B16";
-const ORANGE = "#F9A826";
+
 
 const hasSlug = (item: NavItem): item is MenuItem => {
   return typeof item.slug === "string" && item.slug.trim().length > 0;
