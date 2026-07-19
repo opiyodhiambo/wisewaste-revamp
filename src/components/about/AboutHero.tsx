@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Container from "../ui/Container";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, ChevronRight as PageArrow, Recycle, Globe2, Gem } from "lucide-react";
+import { motion } from "framer-motion";
 
 import vehicle8 from "../../assets/vehicle29.jpeg";
 import vehicle17 from "../../assets/vehicle25.jpeg";
@@ -10,309 +10,325 @@ import vehicle12 from "../../assets/vehicle33.jpeg";
 
 const GREEN = "#1B6B1B";
 const ORANGE = "#F9A826";
+const GOLD = "#B38C00";
+const DARK = "#0B3D2E";
+const DARK_2 = "#0F4A38";
 
-const heroSlides = [vehicle8, vehicle17, vehicle12];
+const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-// Different slide timings (ms)
-const slideTimings = [5000, 4200, 6500];
-const DEFAULT_TIMING = 4800;
+const galleryImages = [vehicle8, vehicle17, vehicle12];
 
-// Swipe config
-const SWIPE_CONFIDENCE = 70;
+const factChips = [
+  { icon: Recycle, label: "15+ Years Recovering Material" },
+  { icon: Gem, label: "4 Material Streams" },
+  { icon: Globe2, label: "40+ Export Partners" },
+];
 
-export default function AboutHero() {
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
-  const [paused, setPaused] = useState(false);
+/** Full-bleed animated backdrop, replaces the photo slider */
+function AboutBackdrop() {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      viewBox="0 0 1440 900"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="aboutBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={DARK} />
+          <stop offset="100%" stopColor={DARK_2} />
+        </linearGradient>
+        <pattern id="aboutGrid" width="64" height="64" patternUnits="userSpaceOnUse">
+          <path d="M 64 0 L 0 0 0 64" fill="none" stroke="rgba(255,255,255,0.045)" strokeWidth="1" />
+        </pattern>
+      </defs>
 
-  const timerRef = useRef<number | null>(null);
-  const slideCount = heroSlides.length;
+      <rect width="1440" height="900" fill="url(#aboutBg)" />
+      <rect width="1440" height="900" fill="url(#aboutGrid)" />
 
-  const currentDelay = useMemo(
-    () => slideTimings[index] ?? DEFAULT_TIMING,
-    [index]
+      <motion.g
+        animate={{ rotate: 360 }}
+        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+        style={{ transformOrigin: "1180px 200px" }}
+      >
+        <polygon
+          points="1180,130 1240,164 1240,232 1180,266 1120,232 1120,164"
+          fill="none"
+          stroke={ORANGE}
+          strokeOpacity="0.22"
+          strokeWidth="2"
+        />
+        <polygon
+          points="1180,150 1220,172 1220,224 1180,246 1140,224 1140,172"
+          fill="none"
+          stroke={ORANGE}
+          strokeOpacity="0.14"
+          strokeWidth="1.5"
+        />
+      </motion.g>
+
+      <motion.g
+        animate={{ rotate: -360 }}
+        transition={{ duration: 130, repeat: Infinity, ease: "linear" }}
+        style={{ transformOrigin: "190px 700px" }}
+      >
+        <polygon
+          points="190,630 246,660 246,722 190,752 134,722 134,660"
+          fill="none"
+          stroke="rgba(255,255,255,0.10)"
+          strokeWidth="2"
+        />
+      </motion.g>
+
+      <motion.circle
+        cx="720"
+        cy="150"
+        r="150"
+        fill="none"
+        stroke="rgba(255,255,255,0.05)"
+        strokeWidth="1"
+        animate={{ r: [150, 164, 150] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </svg>
   );
+}
 
-  const clampIndex = (i: number) => (i + slideCount) % slideCount;
+/** Page-flip gallery: each photo turns like a book page to reveal the next */
+function PageFlipGallery({ images }: { images: string[] }) {
+  const [index, setIndex] = useState(0);
+  const [flipping, setFlipping] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const total = images.length;
+  const nextIndex = useMemo(() => (index + 1) % total, [index, total]);
+  const timerRef = useRef<number | null>(null);
 
-  const goTo = (nextIndex: number, dir: 1 | -1) => {
-    setDirection(dir);
-    setIndex(clampIndex(nextIndex));
+  const triggerFlip = () => {
+    if (flipping) return;
+    setFlipping(true);
   };
 
-  const next = () => goTo(index + 1, 1);
-  const prev = () => goTo(index - 1, -1);
-
-  // Auto-slide with per-slide timing + pause on hover
   useEffect(() => {
     if (paused) return;
 
-    if (timerRef.current) window.clearTimeout(timerRef.current);
-
     timerRef.current = window.setTimeout(() => {
-      next();
-    }, currentDelay);
+      triggerFlip();
+    }, 3800);
 
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, paused, currentDelay]);
+  }, [index, paused, flipping]);
 
-  // ✅ No distortion: keep bg-cover, and "zoom out" with uniform scale (not backgroundSize % %)
-  // You can tune these per slide if needed.
-  const bgScale = 1; // lower = shows more image (less "zoomed"); keep 0.90–0.98
+  const handleFlipComplete = () => {
+    if (!flipping) return;
+    setIndex(nextIndex);
+    setFlipping(false);
+  };
 
-  // Framer Motion variants (premium entrance)
-  const slideVariants = {
-    enter: (dir: 1 | -1) => ({
-      opacity: 0,
-      scale: 1.08,
-      x: dir === 1 ? 55 : -55,
-      filter: "blur(10px)",
-    }),
-    center: {
-      opacity: 1,
-      scale: 1,
-      x: 0,
-      filter: "blur(0px)",
-    },
-    exit: (dir: 1 | -1) => ({
-      opacity: 0,
-      scale: 1.04,
-      x: dir === 1 ? -55 : 55,
-      filter: "blur(10px)",
-    }),
+  const jumpTo = (i: number) => {
+    if (i === index || flipping) return;
+    setIndex(i);
   };
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
-      {/* Slider background */}
-      <div
-        className="absolute inset-0 overflow-hidden"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onTouchStart={() => setPaused(true)}
-        onTouchEnd={() => setPaused(false)}
+    <div
+      className="relative aspect-[4/3] sm:aspect-[5/4] w-full rounded-2xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.35)] border border-white/10"
+      style={{ perspective: 1600 }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* base layer: the page underneath, already showing what's coming next */}
+      <img
+        src={images[nextIndex]}
+        alt="Recovery operations"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+
+      {/* top layer: the current page, flips away on its left edge */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          transformOrigin: "left center",
+          transformStyle: "preserve-3d",
+          backfaceVisibility: "hidden",
+        }}
+        animate={flipping ? { rotateY: -150, opacity: 0.15 } : { rotateY: 0, opacity: 1 }}
+        transition={{ duration: 0.9, ease: EASE_OUT }}
+        onAnimationComplete={handleFlipComplete}
       >
-        <AnimatePresence initial={false} custom={direction}>
-          {/* This is the interactive/swipe layer */}
-          <motion.div
-            key={index}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0"
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.12}
-            onDragEnd={(_, info) => {
-              const swipePower =
-                Math.abs(info.offset.x) + Math.abs(info.velocity.x) * 0.2;
-
-              if (info.offset.x < -SWIPE_CONFIDENCE || swipePower > 260) next();
-              else if (info.offset.x > SWIPE_CONFIDENCE || swipePower > 260)
-                prev();
-            }}
-          >
-            {/* ✅ This inner layer does the background rendering with safe aspect ratio */}
-            <motion.div
-              className="absolute inset-0 bg-center bg-cover will-change-transform"
-              style={{ backgroundImage: `url(${heroSlides[index]})` }}
-              animate={{ scale: bgScale }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Overlays */}
-        <div className="absolute inset-0 bg-black/40" />
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: "rgba(11,46,34,0.20)" }}
+        <img
+          src={images[index]}
+          alt="Recovery operations"
+          className="h-full w-full object-cover"
         />
+        {/* page-edge shading for a bit of physicality */}
+        <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-black/25 to-transparent" />
+      </motion.div>
 
-        {/* Manual arrows */}
-        <div className="absolute inset-y-0 left-3 sm:left-6 z-20 flex items-center">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+
+      {/* manual next-page control */}
+      <button
+        type="button"
+        onClick={triggerFlip}
+        aria-label="Turn page"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white/15 border border-white/25 text-white backdrop-blur flex items-center justify-center hover:bg-white/25 transition"
+      >
+        <PageArrow size={18} />
+      </button>
+
+      {/* page dots */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+        {images.map((_, i) => (
           <button
+            key={i}
             type="button"
-            onClick={prev}
-            aria-label="Previous slide"
-            className="
-              h-11 w-11 sm:h-12 sm:w-12
-              rounded-full
-              bg-white/10 border border-white/20
-              text-white
-              flex items-center justify-center
-              hover:bg-white/15 transition
-              backdrop-blur
-            "
-          >
-            <ChevronLeft size={22} />
-          </button>
-        </div>
-
-        <div className="absolute inset-y-0 right-3 sm:right-6 z-20 flex items-center">
-          <button
-            type="button"
-            onClick={next}
-            aria-label="Next slide"
-            className="
-              h-11 w-11 sm:h-12 sm:w-12
-              rounded-full
-              bg-white/10 border border-white/20
-              text-white
-              flex items-center justify-center
-              hover:bg-white/15 transition
-              backdrop-blur
-            "
-          >
-            <ChevronRight size={22} />
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="absolute bottom-6 right-6 z-20 flex gap-2">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => goTo(i, i > index ? 1 : -1)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`h-2.5 w-2.5 rounded-full transition ${
-                i === index ? "bg-white" : "bg-white/40 hover:bg-white/60"
-              }`}
-            />
-          ))}
-        </div>
-
-        {paused && (
-          <div className="absolute bottom-6 left-6 z-20 text-[11px] font-semibold text-white/80">
-            Paused
-          </div>
-        )}
+            onClick={() => jumpTo(i)}
+            aria-label={`Go to page ${i + 1}`}
+            className="h-2 w-2 rounded-full transition"
+            style={{ backgroundColor: i === index ? "#fff" : "rgba(255,255,255,0.4)" }}
+          />
+        ))}
       </div>
+    </div>
+  );
+}
 
-      {/* Content sizing (fills viewport too) */}
-      <Container className="relative min-h-screen py-12 sm:py-16 lg:py-20 flex flex-col justify-center">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
-          }}
-          className="max-w-3xl mx-auto flex flex-col gap-5"
-        >
-          <motion.h1
-            variants={{
-              hidden: { opacity: 0, y: 50 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-              },
-            }}
-            className="text-white font-extrabold leading-[1.05] text-3xl sm:text-5xl lg:text-6xl text-center"
-          >
-            About Us
-          </motion.h1>
+export default function AboutHero() {
+  return (
+    <section className="relative min-h-screen w-full overflow-hidden">
+      <AboutBackdrop />
 
+      <Container className="relative min-h-screen py-16 sm:py-20 lg:py-24 flex items-center">
+        <div className="w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* LEFT: copy */}
           <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
             variants={{
-              hidden: { opacity: 0, y: 50 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-              },
+              hidden: {},
+              show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
             }}
-            className="text-white/90 text-xs font-semibold tracking-wide text-center"
-          >
-            Work with professionals
-          </motion.div>
-
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 50 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-              },
-            }}
-            className="text-white/90 text-sm sm:text-base leading-relaxed font-semibold text-center max-w-2xl mx-auto"
-          >
-            With over 15 years of experience and hundreds of satisfied customers,
-            <br className="hidden sm:block" />
-            we know what it takes to make your home, office or business clean and
-            also garbage collection.
-          </motion.p>
-
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 50 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-              },
-            }}
-            className="mt-6 flex flex-wrap justify-center gap-4"
+            className="flex flex-col gap-5 text-center lg:text-left"
           >
             <motion.div
-              whileHover={{ backgroundColor: GREEN }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold border border-white shadow-sm cursor-pointer"
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+              }}
+              className="text-white/90 text-xs font-semibold tracking-wide"
             >
-              <Link to="/contact" className="flex text-white items-center gap-2">
-                Inquiry
-                <motion.span
-                  whileHover={{ x: 4 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="flex items-center"
+              Work With Recovery Professionals
+            </motion.div>
+
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+              }}
+              className="text-white font-extrabold leading-[1.05] text-4xl sm:text-5xl lg:text-6xl"
+            >
+              About Us
+            </motion.h1>
+
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+              }}
+              className="text-white/90 text-sm sm:text-base leading-relaxed font-semibold max-w-xl mx-auto lg:mx-0"
+            >
+              With over 15 years of experience across residential, commercial, and
+              industrial clients, we sort, recover, and reprocess material streams,
+              e-waste, plastics, metals, and minerals, turning what looks like
+              waste into resources worth mining twice.
+            </motion.p>
+
+            {/* fact chips — the added content */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
+              }}
+              className="flex flex-wrap justify-center lg:justify-start gap-3 mt-2"
+            >
+              {factChips.map(({ icon: Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs sm:text-sm font-semibold text-white/90"
                 >
-                  <ArrowUpRight size={16} />
-                </motion.span>
-              </Link>
+                  <Icon size={15} style={{ color: GOLD }} />
+                  {label}
+                </div>
+              ))}
             </motion.div>
 
             <motion.div
-              whileHover={{ backgroundColor: ORANGE }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold border border-white/70 backdrop-blur-[1px] cursor-pointer"
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+              }}
+              className="mt-6 flex flex-wrap justify-center lg:justify-start gap-4"
             >
-              <Link to="/request-pickup" className="w-full text-white text-center">
-                Request a Quote
-              </Link>
+              <motion.div
+                whileHover={{ backgroundColor: GREEN }}
+                transition={{ duration: 0.3, ease: EASE_OUT }}
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold border border-white shadow-sm cursor-pointer"
+              >
+                <Link to="/contact" className="flex text-white items-center gap-2">
+                  Inquiry
+                  <motion.span
+                    whileHover={{ x: 4 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className="flex items-center"
+                  >
+                    <ArrowUpRight size={16} />
+                  </motion.span>
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ backgroundColor: ORANGE }}
+                transition={{ duration: 0.3, ease: EASE_OUT }}
+                className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold border border-white/70 backdrop-blur-[1px] cursor-pointer"
+              >
+                <Link to="/request-pickup" className="w-full text-white text-center">
+                  Request a Quote
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
+              }}
+              className="mt-8 text-xs text-white/90 flex justify-center lg:justify-start"
+            >
+              <Link to="/" className="hover:underline">
+                Home
+              </Link>{" "}
+              <span className="mx-1">›</span>{" "}
+              <span className="opacity-95">About Us</span>
             </motion.div>
           </motion.div>
 
+          {/* RIGHT: page-flip gallery */}
           <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 50 },
-              show: {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-              },
-            }}
-            className="mt-10 text-xs text-white/90 flex justify-start"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.1 }}
           >
-            <Link to="/" className="hover:underline">
-              Home
-            </Link>{" "}
-            <span className="mx-1">›</span>{" "}
-            <span className="opacity-95">About Us</span>
+            <PageFlipGallery images={galleryImages} />
           </motion.div>
-        </motion.div>
+        </div>
       </Container>
 
-      {/* bottom green bar */}
+      {/* bottom accent bar */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[3px]"
         style={{ backgroundColor: GREEN, opacity: 0.5 }}

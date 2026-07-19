@@ -22,7 +22,10 @@ type NavItem = {
 
 const GREEN = "#1B6B1B";
 const GREEN_DARK = "#165B16";
+const GOLD = "#B38C00";
+const ORANGE = "#F9A826";
 
+const SLOGAN = "Swift. Clean. Green.";
 
 const hasSlug = (item: NavItem): item is MenuItem => {
   return typeof item.slug === "string" && item.slug.trim().length > 0;
@@ -30,11 +33,19 @@ const hasSlug = (item: NavItem): item is MenuItem => {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   const typedNav = nav as unknown as NavItem[];
 
   useEffect(() => setOpen(false), [location.pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const servicesNode = useMemo(
     () => typedNav.find((n) => n.label === "Services"),
@@ -79,41 +90,31 @@ export default function Header() {
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
-      "relative inline-flex items-center",
-      "text-[13px] xl:text-sm font-semibold tracking-tight",
-      "text-[#1B6B1B] transition-colors duration-200 hover:text-[#F9A826]",
-      "pb-2",
-      "nav-underline",
+      "relative inline-flex items-center rounded-full",
+      "px-3.5 py-2 text-[13px] xl:text-sm font-semibold tracking-tight",
+      "transition-all duration-200",
+      "nav-pill",
       isActive ? "is-active" : "",
     ].join(" ");
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-100">
+    <header
+      className={[
+        "sticky top-0 z-50 bg-white transition-shadow duration-300",
+        scrolled ? "shadow-[0_4px_20px_rgba(11,61,46,0.08)]" : "",
+      ].join(" ")}
+    >
       <style>{`
-        .nav-underline::after{
-          content:"";
-          position:absolute;
-          left:0;
-          right:0;
-          bottom:0;
-          height:2px;
-          border-radius:999px;
-          transform: translateY(6px) scaleX(0.35);
-          transform-origin:left;
-          opacity:0;
-          transition: transform 220ms ease, opacity 220ms ease, background-color 220ms ease;
+        .nav-pill{
+          color: #1B6B1B;
           background: transparent;
         }
-
-        .nav-underline:hover::after{
-          opacity:1;
-          transform: translateY(0px) scaleX(1);
-          background: #F9A826;
+        .nav-pill:hover{
+          color: #1B6B1B;
+          background: rgba(27,107,27,0.08);
         }
-
-        .nav-underline.is-active::after{
-          opacity:1;
-          transform: translateY(0px) scaleX(1);
+        .nav-pill.is-active{
+          color: #ffffff;
           background: #1B6B1B;
         }
 
@@ -143,17 +144,29 @@ export default function Header() {
         <div className="grid grid-cols-[minmax(0,1fr)_minmax(360px,520px)]">
           <div className="min-w-0">
             <Container className="flex items-center justify-between gap-6 py-4">
-              <Link to="/" className="shrink-0">
-                <div className="h-14 w-44 2xl:h-16 2xl:w-52 bg-slate-100 rounded-md overflow-hidden flex items-center justify-center">
+              <Link to="/" className="shrink-0 flex flex-col gap-1.5">
+                <div
+                  className={[
+                    "bg-slate-100 rounded-md overflow-hidden flex items-center justify-center transition-all duration-300",
+                    scrolled ? "h-12 w-40 2xl:h-14 2xl:w-48" : "h-14 w-44 2xl:h-16 2xl:w-52",
+                  ].join(" ")}
+                >
                   <img
                     src={logo3}
                     alt={site.name}
                     className="h-full w-full object-contain p-0.5"
                   />
                 </div>
+
+                <span
+                  className="text-[10px] 2xl:text-[11px] font-bold tracking-[0.16em] uppercase pl-0.5"
+                  style={{ color: GOLD }}
+                >
+                  {SLOGAN}
+                </span>
               </Link>
 
-              <nav className="flex min-w-0 items-center justify-end gap-5 2xl:gap-8">
+              <nav className="flex min-w-0 items-center justify-end gap-1 2xl:gap-2">
                 <NavLink to="/" className={navLinkClass}>
                   Home
                 </NavLink>
@@ -173,7 +186,7 @@ export default function Header() {
             </Container>
           </div>
 
-          {/* CTA block, now with a quiet lattice texture instead of a flat fill */}
+          {/* CTA block, quiet lattice texture */}
           <div className="relative flex items-center min-w-0 overflow-hidden" style={{ backgroundColor: GREEN }}>
             <svg
               className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
@@ -223,7 +236,7 @@ export default function Header() {
       {/* Tablet header */}
       <div className="hidden md:block xl:hidden">
         <Container className="flex items-center justify-between gap-4 py-3">
-          <Link to="/" className="shrink-0">
+          <Link to="/" className="shrink-0 flex flex-col gap-1">
             <div className="h-14 w-40 bg-slate-100 rounded-md overflow-hidden flex items-center justify-center">
               <img
                 src={logo3}
@@ -231,6 +244,12 @@ export default function Header() {
                 className="h-full w-full object-contain p-0.5"
               />
             </div>
+            <span
+              className="text-[9px] font-bold tracking-[0.14em] uppercase pl-0.5"
+              style={{ color: GOLD }}
+            >
+              {SLOGAN}
+            </span>
           </Link>
 
           <div className="flex items-center gap-3">
@@ -274,7 +293,7 @@ export default function Header() {
       <div className="md:hidden">
         <div className="flex items-center justify-between">
           <Container className="py-3">
-            <Link to="/" className="inline-flex">
+            <Link to="/" className="inline-flex flex-col gap-1">
               <div className="h-12 w-36 xs:w-40 bg-slate-100 rounded-md overflow-hidden flex items-center justify-center">
                 <img
                   src={logo3}
@@ -282,6 +301,12 @@ export default function Header() {
                   className="h-full w-full object-contain p-0.5"
                 />
               </div>
+              <span
+                className="text-[8.5px] font-bold tracking-[0.12em] uppercase pl-0.5"
+                style={{ color: GOLD }}
+              >
+                {SLOGAN}
+              </span>
             </Link>
           </Container>
 
@@ -307,6 +332,12 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* gradient edge instead of a flat gray border */}
+      <div
+        className="h-[2px] w-full"
+        style={{ background: `linear-gradient(90deg, ${GOLD}, ${ORANGE}, ${GREEN})` }}
+      />
 
       <MobileMenu
         open={open}
