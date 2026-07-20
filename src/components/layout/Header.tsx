@@ -1,10 +1,9 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Phone, Menu, Mail } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import Container from "../ui/Container";
 import { nav, site } from "../../data/site";
 import MobileMenu from "../ui/MobileMenu";
-import ServicesDropdown from "../ui/ServicesDropdown";
 import RecyclingDropdown from "../ui/RecyclingDropdown";
 import logo3 from "../../assets/logo3.png";
 
@@ -89,13 +88,7 @@ export default function Header() {
   }, [servicesNode, typedNav]);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    [
-      "relative inline-flex items-center rounded-full",
-      "px-3.5 py-2 text-[13px] xl:text-sm font-semibold tracking-tight",
-      "transition-all duration-200",
-      "nav-pill",
-      isActive ? "is-active" : "",
-    ].join(" ");
+    ["nav-underline text-[13px] xl:text-sm", isActive ? "is-active" : ""].join(" ");
 
   return (
     <header
@@ -105,18 +98,31 @@ export default function Header() {
       ].join(" ")}
     >
       <style>{`
-        .nav-pill{
+        .nav-underline{
+          position: relative;
+          display: inline-flex;
+          align-items: center;
           color: #1B6B1B;
-          background: transparent;
+          font-weight: 600;
+          padding: 0.5rem 0.35rem;
+          transition: color .2s ease;
         }
-        .nav-pill:hover{
-          color: #1B6B1B;
-          background: rgba(27,107,27,0.08);
+        .nav-underline::after{
+          content: '';
+          position: absolute;
+          left: 0.35rem;
+          right: 0.35rem;
+          bottom: 2px;
+          height: 2px;
+          background: #F9A826;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform .2s ease;
         }
-        .nav-pill.is-active{
-          color: #ffffff;
-          background: #1B6B1B;
-        }
+        .nav-underline:hover{ color: #1B6B1B; }
+        .nav-underline:hover::after{ transform: scaleX(1); }
+        .nav-underline.is-active{ color: #0B3D2E; }
+        .nav-underline.is-active::after{ transform: scaleX(1); background: #1B6B1B; }
 
         @keyframes ringWave {
           0% { transform: scale(1); opacity: .35; }
@@ -141,96 +147,59 @@ export default function Header() {
 
       {/* Desktop header */}
       <div className="hidden xl:block">
-        <div className="grid grid-cols-[minmax(0,1fr)_minmax(360px,520px)]">
-          <div className="min-w-0">
-            <Container className="flex items-center justify-between gap-6 py-4">
-              <Link to="/" className="shrink-0 flex flex-col gap-1.5">
-                <div
-                  className={[
-                    "bg-slate-100 rounded-md overflow-hidden flex items-center justify-center transition-all duration-300",
-                    scrolled ? "h-12 w-40 2xl:h-14 2xl:w-48" : "h-14 w-44 2xl:h-16 2xl:w-52",
-                  ].join(" ")}
-                >
-                  <img
-                    src={logo3}
-                    alt={site.name}
-                    className="h-full w-full object-contain p-0.5"
-                  />
-                </div>
-
-                <span
-                  className="text-[10px] 2xl:text-[11px] font-bold tracking-[0.16em] uppercase pl-0.5"
-                  style={{ color: GOLD }}
-                >
-                  {SLOGAN}
-                </span>
-              </Link>
-
-              <nav className="flex min-w-0 items-center justify-end gap-1 2xl:gap-2">
-                <NavLink to="/" className={navLinkClass}>
-                  Home
-                </NavLink>
-
-                <NavLink to="/about" className={navLinkClass}>
-                  About Us
-                </NavLink>
-
-                <ServicesDropdown items={services} />
-
-                <RecyclingDropdown />
-
-                <NavLink to="/contact" className={navLinkClass}>
-                  Contact Us
-                </NavLink>
-              </nav>
-            </Container>
-          </div>
-
-          {/* CTA block, quiet lattice texture */}
-          <div className="relative flex items-center min-w-0 overflow-hidden" style={{ backgroundColor: GREEN }}>
-            <svg
-              className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
-              preserveAspectRatio="none"
-              aria-hidden="true"
+        <Container className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-4">
+          <Link to="/" className="shrink-0 flex flex-col gap-1.5 justify-self-start">
+            <div
+              className={[
+                "bg-slate-100 rounded-md overflow-hidden flex items-center justify-center transition-all duration-300",
+                scrolled ? "h-12 w-40 2xl:h-14 2xl:w-48" : "h-14 w-44 2xl:h-16 2xl:w-52",
+              ].join(" ")}
             >
-              <defs>
-                <pattern id="headerCtaGrid" width="26" height="26" patternUnits="userSpaceOnUse">
-                  <path d="M 26 0 L 0 0 0 26" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#headerCtaGrid)" />
-            </svg>
-
-            <div className="relative w-full px-5 2xl:px-8 flex items-center justify-between gap-4">
-              <Link
-                to="/request-pickup"
-                className="group inline-flex items-center justify-center gap-3 bg-white text-[#F9A826] font-semibold rounded-md px-4 2xl:px-6 py-3 shadow-sm whitespace-nowrap transition-all duration-200 hover:-translate-y-[1px] hover:shadow-md hover:text-[#165B16]"
-              >
-                <Mail
-                  size={18}
-                  className="text-[#F9A826] transition-colors duration-200 group-hover:text-[#165B16]"
-                />
-                Request Pickup
-              </Link>
-
-              <a
-                href={`tel:${site.phoneDigits}`}
-                className="flex items-center gap-3 text-white font-semibold whitespace-nowrap"
-              >
-                <span
-                  className="relative h-12 w-12 2xl:h-16 2xl:w-16 shrink-0 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "#2E8A2E" }}
-                >
-                  <span className="ring-wave" />
-                  <span className="ring-wave delay" />
-                  <Phone size={20} className="relative z-10" />
-                </span>
-
-                <span className="text-base 2xl:text-lg">{site.phoneDisplay}</span>
-              </a>
+              <img
+                src={logo3}
+                alt={site.name}
+                className="h-full w-full object-contain p-0.5"
+              />
             </div>
-          </div>
-        </div>
+
+            <span
+              className="text-[10px] 2xl:text-[11px] font-bold tracking-[0.16em] uppercase pl-0.5"
+              style={{ color: GOLD }}
+            >
+              {SLOGAN}
+            </span>
+          </Link>
+
+          <nav className="flex items-center gap-1 2xl:gap-2 justify-self-center">
+            <NavLink to="/" className={navLinkClass}>
+              Home
+            </NavLink>
+
+            <NavLink to="/about" className={navLinkClass}>
+              About Us
+            </NavLink>
+            <NavLink to="/our-team" className={navLinkClass}>
+              Our Team
+            </NavLink>
+
+            <NavLink to="/services/garbage-collection" className={navLinkClass}>
+              Services
+            </NavLink>
+
+            <RecyclingDropdown />
+
+            <NavLink to="/community-engagement" className={navLinkClass}>
+              Community Engagement
+            </NavLink>
+
+            <NavLink to="/contact" className={navLinkClass}>
+              Contact Us
+            </NavLink>
+          </nav>
+
+          {/* empty spacer, keeps the nav visually centered regardless of logo width */}
+          <div aria-hidden="true" />
+        </Container>
       </div>
 
       {/* Tablet header */}
@@ -252,40 +221,16 @@ export default function Header() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/request-pickup"
-              className="hidden sm:inline-flex items-center gap-2 text-white font-semibold rounded-md px-4 py-3 text-sm transition-colors"
-              style={{ backgroundColor: GREEN }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GREEN_DARK)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GREEN)}
-            >
-              <Mail size={17} />
-              Request Pickup
-            </Link>
-
-            <a
-              href={`tel:${site.phoneDigits}`}
-              className="h-12 w-12 rounded-full flex items-center justify-center text-white relative"
-              style={{ backgroundColor: "#2E8A2E" }}
-              aria-label="Call"
-            >
-              <span className="ring-wave" />
-              <span className="ring-wave delay" />
-              <Phone size={18} className="relative z-10" />
-            </a>
-
-            <button
-              className="h-12 w-12 rounded-md text-white flex items-center justify-center transition-colors"
-              style={{ backgroundColor: GREEN }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GREEN_DARK)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GREEN)}
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
-            >
-              <Menu size={22} />
-            </button>
-          </div>
+          <button
+            className="h-12 w-12 rounded-md text-white flex items-center justify-center transition-colors"
+            style={{ backgroundColor: GREEN }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = GREEN_DARK)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GREEN)}
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
         </Container>
       </div>
 
@@ -310,20 +255,10 @@ export default function Header() {
             </Link>
           </Container>
 
-          <div className="px-3 py-3 flex items-center gap-2 shrink-0" style={{ backgroundColor: GREEN }}>
-            <a
-              href={`tel:${site.phoneDigits}`}
-              className="relative h-11 w-11 rounded-full flex items-center justify-center text-white"
-              style={{ backgroundColor: "#2E8A2E" }}
-              aria-label="Call"
-            >
-              <span className="ring-wave" />
-              <span className="ring-wave delay" />
-              <Phone size={17} className="relative z-10" />
-            </a>
-
+          <div className="px-3 py-3 flex items-center shrink-0">
             <button
-              className="h-11 w-11 rounded-md border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition-colors"
+              className="h-11 w-11 rounded-md flex items-center justify-center transition-colors"
+              style={{ backgroundColor: GREEN, color: "white" }}
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >

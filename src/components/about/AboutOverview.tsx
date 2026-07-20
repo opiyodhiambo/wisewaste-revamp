@@ -1,85 +1,85 @@
 import Container from "../ui/Container";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  type Variants,
-  AnimatePresence,
-} from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, Gem } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
+import { useRef } from "react";
 
-// ✅ Add as many images as you want here (import your other assets)
 import vehicle6 from "../../assets/vehicle6.jpeg";
-import vehicle3 from "../../assets/vehicle36.jpeg";
-import vehicle4 from "../../assets/vehicle28.jpeg";
-import vehicle5 from "../../assets/vehicle25.jpeg";
 
 const GREEN = "#1B6B1B";
-const ORANGE = "#F9A826";
+const GOLD = "#B38C00";
 const DARK = "#0B3D2E";
+const DARK_2 = "#0F4A38";
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+/** Dark hex/mineral backdrop, replaces the photo slider */
+function OverviewBackdrop() {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      viewBox="0 0 700 700"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="overviewBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={DARK} />
+          <stop offset="100%" stopColor={DARK_2} />
+        </linearGradient>
+        <pattern id="overviewGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.045)" strokeWidth="1" />
+        </pattern>
+      </defs>
+
+      <rect width="700" height="700" fill="url(#overviewBg)" />
+      <rect width="700" height="700" fill="url(#overviewGrid)" />
+
+      <motion.g
+        animate={{ rotate: 360 }}
+        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+        style={{ transformOrigin: "540px 160px" }}
+      >
+        <polygon
+          points="540,100 590,128 590,184 540,212 490,184 490,128"
+          fill="none"
+          stroke={GOLD}
+          strokeOpacity="0.3"
+          strokeWidth="2"
+        />
+      </motion.g>
+
+      <motion.g
+        animate={{ rotate: -360 }}
+        transition={{ duration: 130, repeat: Infinity, ease: "linear" }}
+        style={{ transformOrigin: "140px 560px" }}
+      >
+        <polygon
+          points="140,500 190,528 190,584 140,612 90,584 90,528"
+          fill="none"
+          stroke="rgba(255,255,255,0.14)"
+          strokeWidth="2"
+        />
+      </motion.g>
+
+      <motion.circle
+        cx="350"
+        cy="380"
+        r="150"
+        fill="none"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="1"
+        animate={{ r: [150, 164, 150] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </svg>
+  );
+}
 
 export default function AboutOverview() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  // Parallax like HomeIntroSplit
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const imgY = useTransform(scrollYProgress, [0, 1], [20, -20]);
-
-  // ✅ Slider images (same assets, just relabelled to match the new positioning)
-  const slides = useMemo(
-    () => [
-      { src: vehicle6, alt: "Waste collection in operation" },
-      { src: vehicle3, alt: "Materials recovery facility" },
-      { src: vehicle4, alt: "Collection fleet on route" },
-      { src: vehicle5, alt: "Sorted materials ready for recovery" },
-    ],
-    []
-  );
-
-  // ✅ Slider state
-  const [active, setActive] = useState(0);
-  const [dir, setDir] = useState<1 | -1>(1);
-  const [paused, setPaused] = useState(false);
-
-  const SLIDE_MS = 3200;
-
-  useEffect(() => {
-    if (slides.length <= 1 || paused) return;
-
-    const t = setInterval(() => {
-      setDir(1);
-      setActive((i) => (i + 1) % slides.length);
-    }, SLIDE_MS);
-
-    return () => clearInterval(t);
-  }, [slides.length, paused]);
-
-  const prev = () => {
-    if (slides.length <= 1) return;
-    setDir(-1);
-    setActive((i) => (i - 1 + slides.length) % slides.length);
-  };
-
-  const next = () => {
-    if (slides.length <= 1) return;
-    setDir(1);
-    setActive((i) => (i + 1) % slides.length);
-  };
-
   const containerV: Variants = {
     hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.05,
-      },
-    },
+    show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
   };
 
   const itemV: Variants = {
@@ -103,28 +103,8 @@ export default function AboutOverview() {
     },
   };
 
-  const slideVariants: Variants = {
-    enter: (d: 1 | -1) => ({
-      x: d === 1 ? 22 : -22,
-      opacity: 0,
-      filter: "blur(10px)",
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      transition: { duration: 0.55, ease: EASE_OUT },
-    },
-    exit: (d: 1 | -1) => ({
-      x: d === 1 ? -22 : 22,
-      opacity: 0,
-      filter: "blur(10px)",
-      transition: { duration: 0.35, ease: EASE_OUT },
-    }),
-  };
-
   return (
-    <section ref={sectionRef} className="bg-white overflow-hidden">
+    <section ref={sectionRef as any} className="bg-white overflow-hidden">
       <Container className="py-12 md:py-16">
         <motion.div
           variants={containerV}
@@ -133,14 +113,14 @@ export default function AboutOverview() {
           viewport={{ once: true, amount: 0.22 }}
           className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] items-start"
         >
-          {/* LEFT SIDE — copy leads now instead of the slider */}
+          {/* LEFT SIDE — copy */}
           <motion.div variants={containerV} className="lg:pt-2 lg:order-1">
             <motion.span
               variants={itemV}
               className="inline-block rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
               style={{ backgroundColor: "rgba(27,107,27,0.1)", color: GREEN }}
             >
-              Urban Mining & Resource Recovery
+              Mission: Urban Mining Experts
             </motion.span>
 
             <motion.h2
@@ -154,6 +134,7 @@ export default function AboutOverview() {
                 whileHover={{ scale: 1.1 }}
                 transition={{ type: "spring", stiffness: 200 }}
                 className="font-extrabold"
+                style={{ color: GREEN }}
               >
                 1M plus
               </motion.span>{" "}
@@ -162,20 +143,20 @@ export default function AboutOverview() {
 
             <motion.p
               variants={itemV}
-              className="mt-6 text-sm leading-relaxed font-semibold"
-              style={{ color: ORANGE }}
+              className="mt-6 text-sm leading-relaxed font-semibold text-slate-700"
             >
-              We are a leading urban mining company in Nairobi, recovering materials from waste rather than
-              simply disposing of it. Our operations turn discarded resources back into usable, tradeable
+              We are a leading urban mining company in Nairobi, recovering
+              materials from waste rather than simply disposing of it. Our
+              operations turn discarded resources back into usable, tradeable
               material, keeping them in circulation instead of in landfills.
             </motion.p>
 
             <motion.p variants={itemV} className="mt-6 text-sm leading-relaxed text-slate-600">
-              Our work spans garbage collection, sorting and segregation, e-waste recycling, plastic
-              recycling, metal recycling, green energy generation, and green manure production. Recovered
-              industrial materials and precious minerals are also traded and exported. Our team of
-              experienced professionals is dedicated to ensuring every stream of waste is recovered and put
-              back to productive use.
+              Our work spans e-waste recycling, plastic and metal recovery,
+              collection and sorting, green energy generation, and the trading
+              and export of recovered industrial materials and minerals. Our
+              team of experienced professionals is dedicated to ensuring every
+              material stream is recovered and put back to productive use.
             </motion.p>
 
             {/* CHECKLIST */}
@@ -186,100 +167,32 @@ export default function AboutOverview() {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT SIDE — slider */}
+          {/* RIGHT SIDE — SVG backdrop, replaces the photo slider */}
           <motion.div variants={cardV} className="relative lg:order-2">
-            <div
-              className="relative rounded-md overflow-hidden bg-slate-200"
-              onMouseEnter={() => setPaused(true)}
-              onMouseLeave={() => setPaused(false)}
-            >
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-70" />
+            <div className="relative rounded-md overflow-hidden h-[280px] sm:h-[360px] lg:h-[460px]">
+              <OverviewBackdrop />
 
-              {/* Slider viewport */}
-              <div className="relative w-full h-[240px] sm:h-[320px] lg:h-[420px] overflow-hidden">
-                <AnimatePresence initial={false} custom={dir} mode="popLayout">
-                  <motion.img
-                    key={active}
-                    custom={dir}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    style={{ y: imgY }}
-                    src={slides[active]?.src}
-                    alt={slides[active]?.alt ?? "Slider image"}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                    whileHover={{ scale: 1.06 }}
-                  />
-                </AnimatePresence>
+              {/* watermark icon */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                <Gem size={180} className="text-white" />
               </div>
 
-              {/* Shine hover overlay */}
-              <motion.div
-                className="pointer-events-none absolute inset-0 opacity-0"
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
-                style={{
-                  background:
-                    "radial-gradient(650px circle at 20% 25%, rgba(255,255,255,0.22), transparent 55%)",
-                }}
-              />
+              {/* mission chip overlay */}
+              <div className="absolute left-6 bottom-6 right-6 sm:right-auto">
+                <div className="inline-flex flex-col gap-1 bg-white/10 backdrop-blur border border-white/15 rounded-lg px-5 py-4 max-w-xs">
+                  <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: GOLD }}>
+                    Our Mission
+                  </span>
+                  <span className="text-white text-sm font-semibold leading-snug">
+                    Urban Mining Experts, turning discarded material into recovered value.
+                  </span>
+                </div>
+              </div>
 
-              {/* Controls */}
-              {slides.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={prev}
-                    aria-label="Previous image"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10
-                               h-10 w-10 rounded-full bg-white/80 backdrop-blur
-                               shadow-sm border border-white/60
-                               grid place-items-center
-                               hover:bg-white transition"
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={next}
-                    aria-label="Next image"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10
-                               h-10 w-10 rounded-full bg-white/80 backdrop-blur
-                               shadow-sm border border-white/60
-                               grid place-items-center
-                               hover:bg-white transition"
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-
-                  {/* Progress bar instead of dots */}
-                  <div className="absolute bottom-3 left-3 right-3 z-10 flex gap-1.5">
-                    {slides.map((_, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        aria-label={`Go to image ${i + 1}`}
-                        onClick={() => {
-                          setDir(i > active ? 1 : -1);
-                          setActive(i);
-                        }}
-                        className="h-1 flex-1 rounded-full overflow-hidden bg-white/35"
-                      >
-                        <span
-                          className="block h-full rounded-full transition-all duration-300"
-                          style={{
-                            width: i === active ? "100%" : "0%",
-                            backgroundColor: "rgba(255,255,255,0.95)",
-                          }}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
+              {/* small photo accent, kept but no longer the section background */}
+              <div className="absolute top-6 right-6 hidden sm:block h-20 w-28 rounded-md overflow-hidden border border-white/15 shadow-lg">
+                <img src={vehicle6} alt="Recovery fleet on route" className="h-full w-full object-cover" />
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -309,16 +222,7 @@ function CheckRow({ text }: { text: string }) {
           <Check size={16} strokeWidth={3} />
         </span>
 
-        <div
-          className="
-            text-sm font-semibold
-            text-slate-800
-            cursor-pointer
-            transition-colors duration-200
-            group-hover:text-[#1B6B1B]
-          "
-          style={{ color: ORANGE }}
-        >
+        <div className="text-sm font-semibold text-slate-800 cursor-pointer transition-colors duration-200 group-hover:text-[#F9A826]">
           {text}
         </div>
       </div>

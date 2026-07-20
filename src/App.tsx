@@ -19,7 +19,10 @@ import Careers from "./pages/Careers";
 import Shop from "./pages/Shop";
 import BlogDetail from "./pages/BlogDetail";
 import WhatsAppFloat from "./components/ui/WhatsAppFloat";
+import ContactFloat from "./components/ui/ContactFloat";
 import RecyclingDetail from "./pages/RecyclingDetail";
+import OurTeam from "./pages/OurTeam";
+import CommunityEngagement from "./pages/CommunityEngagement";
 
 export default function App() {
   const location = useLocation();
@@ -32,6 +35,7 @@ export default function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/our-team" element={<OurTeam />} />
 
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
@@ -49,10 +53,12 @@ export default function App() {
             <Route path="/careers" element={<Careers />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/services/recycling/:slug" element={<RecyclingDetail />} />
+            <Route path="/community-engagement" element={<CommunityEngagement />} />
           </Routes>
         </AnimatePresence>
       </PageShell>
       <WhatsAppFloat />
+      <ContactFloat />
 
       <BackToTop />
     </>

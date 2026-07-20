@@ -179,6 +179,17 @@ export default function MobileMenu({
 
                 <div className="border-t border-slate-100" />
 
+                <Link
+                  to="/our-team"
+                  onClick={onClose}
+                  className="block px-4 py-3 text-sm font-semibold transition-colors hover:bg-slate-50 hover:text-[#F9A826]"
+                  style={{ color: GREEN }}
+                >
+                  Our Team
+                </Link>
+
+                <div className="border-t border-slate-100" />
+
                 {/* Services */}
                 <button
                   type="button"
@@ -296,6 +307,17 @@ export default function MobileMenu({
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                <div className="border-t border-slate-100" />
+
+                <Link
+                  to="/community-engagement"
+                  onClick={onClose}
+                  className="block px-4 py-3 text-sm font-semibold transition-colors hover:bg-slate-50 hover:text-[#F9A826]"
+                  style={{ color: GREEN }}
+                >
+                  Community Engagement
+                </Link>
 
                 <div className="border-t border-slate-100" />
 

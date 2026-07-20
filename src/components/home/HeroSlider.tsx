@@ -28,9 +28,9 @@ const slides = [
     image: vehicle28,
   },
   {
-    kicker: "Sustainable Waste Management",
-    title: "Sorting, Recycling & Export Trading",
-    desc: "Safe, reliable sorting and recycling, feeding into the trading and export of recovered industrial materials and minerals.",
+    kicker: "Sustainable Resource Recovery",
+    title: "Recycled Materials Market",
+    desc: "Recovered plastics, metals, e-waste, and other recyclable materials are processed to meet market demand, creating a reliable supply of high-quality secondary raw materials for industry.",
     image: vehicle3,
   },
 ];
