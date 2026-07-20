@@ -37,7 +37,9 @@ export default function Header() {
 
   const typedNav = nav as unknown as NavItem[];
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
