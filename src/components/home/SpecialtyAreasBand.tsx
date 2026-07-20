@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Container from "../ui/Container";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight, ChevronLeft,  ChevronRight} from "lucide-react";
 import {
   ShieldCheck,
   BadgeDollarSign,
@@ -11,9 +11,12 @@ import {
 } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 
-import vehicle2 from "../../assets/vehicle2.jpeg";
-import worker1 from "../../assets/worker1.jpg";
-import vehicle36 from "../../assets/vehicle36.jpeg";
+import bin from "../../assets/bins.png"
+import ewaste from "../../assets/ewaste.png"
+import manure from "../../assets/manure.png"
+import green_energy from "../../assets/people.png"
+import vehicle14 from "../../assets/vehicle14.jpeg";
+import { useEffect, useState } from "react";
 
 const GOLD = "#B38C00";
 
@@ -32,21 +35,33 @@ const topItems = [
 const cards = [
   {
     title: "Garbage Collection & Sorting",
-    desc: "We collect residential and commercial waste on schedule, then sort it at source to feed clean, recoverable streams into processing.",
-    to: "/services",
-    image: vehicle2,
+    desc: "Scheduled residential, commercial and industrial waste collection with efficient sorting to maximize material recovery.",
+    to: "/services/garbage-collection",
+    image: bin,
   },
   {
-    title: "E-Waste, Plastic & Metal Recycling",
-    desc: "Electronics, plastics, and scrap metal are recovered and reprocessed, keeping valuable material in circulation instead of landfill.",
-    to: "/services",
-    image: vehicle36,
+    title: "Plastic, Metal & E-Waste Recycling",
+    desc: "Recovering valuable plastics, metals and electronic waste through environmentally responsible recycling processes.",
+    to: "/services/recycling/plastic-recycling",
+    image: ewaste,
   },
   {
-    title: "Trading & Export of Recovered Materials",
-    desc: "Recovered industrial materials and precious minerals are traded and exported, connecting our recovery chain to real market demand.",
-    to: "/services",
-    image: worker1,
+    title: "Compost Manure Production",
+    desc: "Organic waste is transformed into nutrient rich compost that supports sustainable agriculture and healthier soils.",
+    to: "/services/compost-manure",
+    image: manure,
+  },
+  {
+    title: "Green Energy Solutions",
+    desc: "Converting organic waste into renewable energy sources that reduce landfill dependence while supporting a cleaner future.",
+    to: "/services/green-energy",
+    image: green_energy,
+  },
+  {
+    title: "Trading & Export",
+    desc: "Recovered materials are processed to international standards and supplied to local and global recycling markets.",
+    to: "/services/export",
+    image: vehicle14,
   },
 ];
 
@@ -123,6 +138,21 @@ export default function SpecialtyAreasBand() {
       transition: { duration: 0.55, ease: EASE_OUT },
     },
   };
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((i) => (i + 1) % cards.length);
+    }, 5500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const prev = () =>
+    setActive((i) => (i - 1 + cards.length) % cards.length);
+
+  const next = () =>
+    setActive((i) => (i + 1) % cards.length);
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -179,63 +209,109 @@ export default function SpecialtyAreasBand() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          className="mt-10 md:mt-12 grid gap-6 lg:grid-cols-3"
+          className="relative mt-10 md:mt-12"
         >
-          {cards.map((c) => (
+          {/* Navigation */}
+          <button
+            onClick={prev}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white shadow-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <button
+            onClick={next}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white shadow-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          <div className="overflow-hidden px-12">
             <motion.div
-              key={c.title}
-              variants={itemV}
-              whileHover={{ y: -8 }}
-              transition={{ type: "spring", stiffness: 260, damping: 18 }}
-              className="group bg-white border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden rounded-md"
+              animate={{
+                x: `-${active * 100}%`,
+              }}
+              transition={{
+                duration: 0.6,
+                ease: EASE_OUT,
+              }}
+              className="flex"
             >
-              <div className="flex flex-col md:flex-row">
-                {/* Image block */}
-                <div className="md:w-[52%] p-3 md:p-4">
-                  <div className="overflow-hidden bg-slate-200 rounded-sm h-44 md:h-[210px] lg:h-[220px]">
-                    <motion.img
-                      src={c.image}
-                      alt={c.title}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      initial={{ scale: 1.04 }}
-                      whileHover={{ scale: 1.12 }}
-                      transition={{ duration: 0.5, ease: EASE_OUT }}
-                    />
-                  </div>
+              {cards.map((c) => (
+                <div
+                  key={c.title}
+                  className="min-w-full flex justify-center"
+                >
+                  <motion.div
+                    whileHover={{ y: -8 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 18,
+                    }}
+                    className="group w-full max-w-5xl bg-white border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] rounded-md overflow-hidden"
+                  >
+                    <div className="flex flex-col md:flex-row">
+                      {/* Image */}
+                      <div className="md:w-1/2 p-4">
+                        <div className="overflow-hidden rounded-sm h-60 md:h-80 bg-slate-200">
+                          <motion.img
+                            src={c.image}
+                            alt={c.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            whileHover={{ scale: 1.08 }}
+                            transition={{ duration: 0.45 }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="md:w-1/2 p-8 flex flex-col justify-center">
+                        <h3 className="text-2xl font-extrabold text-[#0B3D2E]">
+                          {c.title}
+                        </h3>
+
+                        <p className="mt-4 text-[15px] leading-7 text-slate-600">
+                          {c.desc}
+                        </p>
+
+                        <div className="mt-8">
+                          <Link
+                            to={c.to}
+                            className="inline-flex items-center gap-2 text-sm font-extrabold text-[#1B6B1B] hover:text-[#F9A826] transition"
+                          >
+                            Explore More
+
+                            <ArrowRight
+                              size={18}
+                              className="transition-transform group-hover:translate-x-1"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
-
-                {/* Content block */}
-                <div className="md:w-[48%] p-5 md:p-5 md:pl-0 flex flex-col justify-center">
-                  <h3 className="text-lg md:text-xl font-extrabold text-[#0B3D2E]">
-                    {c.title}
-                  </h3>
-
-                  <p className="mt-3 text-sm md:text-[15px] leading-relaxed text-slate-600 line-clamp-3">
-                    {c.desc}
-                  </p>
-
-                  <div className="mt-4">
-                    <Link
-                      to={c.to}
-                      className="group inline-flex items-center gap-2 text-sm font-extrabold transition-colors duration-200 text-[#1B6B1B] hover:text-[#F9A826]"
-                    >
-                      <span>Explore More</span>
-
-                      <span className="inline-flex items-center">
-                        <span className="group-hover:hidden">
-                          <ArrowUpRight size={18} />
-                        </span>
-                        <span className="hidden group-hover:inline">
-                          <ArrowRight size={18} />
-                        </span>
-                      </span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              ))}
             </motion.div>
-          ))}
+          </div>
+
+          {/* Indicators */}
+          <div className="mt-8 flex justify-center gap-2">
+            {cards.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActive(idx)}
+                className={[
+                  "h-2.5 rounded-full transition-all duration-300",
+                  idx === active
+                    ? "w-10 bg-white"
+                    : "w-2.5 bg-white/40 hover:bg-white/70",
+                ].join(" ")}
+              />
+            ))}
+          </div>
         </motion.div>
 
         {/* Bottom paragraph + link */}
