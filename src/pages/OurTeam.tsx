@@ -232,7 +232,7 @@ export default function OurTeam() {
           <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold" style={{ color: DARK }}>
             Our Team
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-sm leading-relaxed text-slate-600">
+          <p className="mt-4 max-w-xl mx-auto text-sm leading-relaxed" style={{ color: ORANGE }}>
             Behind every successful waste collection, recycling initiative, and environmental project is a
             dedicated team committed to delivering reliable, sustainable, and customer focused services.
             Our professionals bring together expertise in operations, environmental management, logistics,
