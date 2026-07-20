@@ -46,23 +46,26 @@ export default function MissionVision() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          className="max-w-5xl text-sm leading-relaxed text-slate-600 space-y-6"
+          className="max-w-5xl"
         >
-          <motion.p variants={itemV}>
-            Our commitment to sustainability and environmental responsibility is at the core of everything we do. We are
-            always looking for new and innovative ways to reduce waste and promote sustainability, and we work with our
-            clients to develop customized waste management plans that meet their specific needs and requirements.
-          </motion.p>
+          <motion.h2
+            variants={itemV}
+            className="text-3xl md:text-4xl font-extrabold"
+            style={{ color: DARK }}
+          >
+            Building a Cleaner and More Sustainable Future
+          </motion.h2>
 
-          <motion.p variants={itemV}>
-            We believe that waste management should be affordable and accessible to everyone, and that is why we offer
-            our services at competitive rates. We also pride ourselves on our exceptional customer service, and our team
-            is always ready and available to answer any questions or concerns you may have.
-          </motion.p>
-
-          <motion.p variants={itemV}>
-            We are proud of the work we do, and we are committed to making Nairobi a cleaner, healthier, and more
-            sustainable city. Thank you for considering our services, and we look forward to working with you.
+          <motion.p
+            variants={itemV}
+            className="mt-6 text-slate-600 leading-8"
+          >
+            Wisewaste Solutions Limited is committed to providing reliable,
+            environmentally responsible, and cost effective waste management
+            services for homes, businesses, institutions, and industries across
+            Kenya. By combining modern waste recovery practices with exceptional
+            customer service, we help our clients reduce environmental impact
+            while creating cleaner and healthier communities.
           </motion.p>
         </motion.div>
 
@@ -87,65 +90,142 @@ export default function MissionVision() {
           </motion.div>
 
           {/* RIGHT CONTENT */}
-          <motion.div variants={containerV} className="order-2">
-            
-            {/* Mission */}
-            <motion.div variants={containerV}>
-              <motion.div
-                variants={itemV}
-                className="text-xs font-semibold tracking-wide"
+          <div className="grid gap-6">
+            <motion.div
+              variants={itemV}
+              className="rounded-xl border border-slate-200 p-8 bg-white shadow-sm"
+            >
+              <div
+                className="text-xs font-bold uppercase tracking-widest"
                 style={{ color: GREEN }}
               >
-                Number One Commercial Waste Collection Service Provider!
-              </motion.div>
+                Our Mission
+              </div>
 
-              <motion.h3
-                variants={itemV}
-                className="mt-4 text-3xl font-extrabold"
+              <h3
+                className="mt-3 text-2xl font-extrabold"
                 style={{ color: DARK }}
               >
-                Mission
-              </motion.h3>
+                Delivering Responsible Waste Solutions
+              </h3>
 
-              <motion.p
-                variants={itemV}
-                className="mt-4 text-sm font-semibold leading-relaxed"
-                style={{ color: ORANGE }}
-              >
-                To engage the best, brightest and most responsive people to innovate & create practices that ensure
-                quality services and risk free outcomes.
-              </motion.p>
+              <p className="mt-4 text-slate-600 leading-7">
+                To engage the best, brightest, and most responsive people to
+                innovate and deliver safe, reliable, and environmentally
+                responsible waste management solutions that exceed customer
+                expectations.
+              </p>
             </motion.div>
 
-            {/* Vision */}
-            <motion.div variants={containerV} className="mt-10">
-              <motion.div
-                variants={itemV}
-                className="text-xs font-semibold tracking-wide"
+            <motion.div
+              variants={itemV}
+              className="rounded-xl border border-slate-200 p-8 bg-white shadow-sm"
+            >
+              <div
+                className="text-xs font-bold uppercase tracking-widest"
                 style={{ color: GREEN }}
               >
-                Leading Commercial & Residential Waste Collection Service Provider!
-              </motion.div>
+                Our Vision
+              </div>
 
-              <motion.h3
-                variants={itemV}
-                className="mt-4 text-3xl font-extrabold"
+              <h3
+                className="mt-3 text-2xl font-extrabold"
                 style={{ color: DARK }}
               >
-                Vision
-              </motion.h3>
+                Leading Sustainable Waste Management
+              </h3>
 
-              <motion.p
-                variants={itemV}
-                className="mt-4 text-sm font-semibold leading-relaxed"
-                style={{ color: ORANGE }}
-              >
-                To provide safe, consistent and quality services.
-              </motion.p>
+              <p className="mt-4 text-slate-600 leading-7">
+                To be Kenya's most trusted provider of sustainable waste
+                management, recycling, and environmental solutions through
+                innovation, operational excellence, and customer satisfaction.
+              </p>
             </motion.div>
-
-          </motion.div>
+          </div>
         </motion.div>
+        {/* Values */}
+<motion.div
+  variants={containerV}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true }}
+  className="mt-20"
+>
+  <motion.div variants={itemV} className="text-center">
+    <div
+      className="text-xs font-bold uppercase tracking-widest"
+      style={{ color: GREEN }}
+    >
+      Company Culture
+    </div>
+
+    <h2
+      className="mt-3 text-3xl md:text-4xl font-extrabold"
+      style={{ color: DARK }}
+    >
+      Our Values
+    </h2>
+
+    <p className="mt-4 max-w-2xl mx-auto text-slate-600 leading-7">
+      Everything we do is guided by a commitment to ethical business,
+      environmental stewardship, and exceptional service delivery.
+    </p>
+  </motion.div>
+
+  <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {[
+      {
+        title: "Integrity",
+        desc: "We act honestly, transparently, and ethically in every engagement."
+      },
+      {
+        title: "Reliability",
+        desc: "Clients can depend on us for timely and consistent service delivery."
+      },
+      {
+        title: "Sustainability",
+        desc: "We promote responsible waste recovery that protects people and the environment."
+      },
+      {
+        title: "Innovation",
+        desc: "We continually improve our processes through modern technologies and ideas."
+      },
+      {
+        title: "Customer First",
+        desc: "Our clients remain at the center of every decision we make."
+      },
+      {
+        title: "Safety",
+        desc: "We prioritize the wellbeing of our employees, customers, and communities."
+      },
+    ].map((value) => (
+      <motion.div
+        key={value.title}
+        variants={itemV}
+        whileHover={{ y: -6 }}
+        className="rounded-xl border border-slate-200 bg-white p-7 shadow-sm"
+      >
+        <div
+          className="h-10 w-10 rounded-full flex items-center justify-center font-bold text-white"
+          style={{ backgroundColor: GREEN }}
+        >
+          ✓
+        </div>
+
+        <h3
+          className="mt-5 text-xl font-bold"
+          style={{ color: DARK }}
+        >
+          {value.title}
+        </h3>
+
+        <p className="mt-3 text-slate-600 leading-7">
+          {value.desc}
+        </p>
+      </motion.div>
+    ))}
+  </div>
+</motion.div>
       </Container>
     </section>
   );
