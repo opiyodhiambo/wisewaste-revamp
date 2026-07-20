@@ -18,41 +18,41 @@ type Member = {
 
 const team: Member[] = [
   {
-    name: "Daniel Otieno",
+    name: "Eng Osuma Brian",
     role: "Chief Executive Officer",
     blurb: "Sets the direction for the company's shift into full-cycle resource recovery and oversees key partnerships.",
     tier: 0,
   },
   {
-    name: "Faith Wanjiru",
+    name: "Naom Kwamboka",
     role: "General Manager",
     blurb: "Runs day-to-day operations across collection, sorting, and recovery, keeping every department aligned.",
     tier: 1,
     angle: -90,
   },
   {
-    name: "Brian Kiptoo",
+    name: "Pravin Obwoyo",
     role: "Accountant",
     blurb: "Manages financial planning, billing, and reporting across all recovery streams and trading operations.",
     tier: 2,
     angle: -45,
   },
   {
-    name: "Amina Hassan",
+    name: "Allan Langat",
     role: "Environmental Engineer",
     blurb: "Ensures every recovery and processing stage meets environmental and safety standards.",
     tier: 2,
     angle: 45,
   },
   {
-    name: "Peter Njoroge",
+    name: "Justin Juma",
     role: "Logistics Manager",
     blurb: "Coordinates the collection fleet and scheduling, keeping materials moving from pickup to processing.",
     tier: 2,
     angle: 135,
   },
   {
-    name: "Grace Achieng",
+    name: "Abigael Hassan",
     role: "Sales & Partnerships Lead",
     blurb: "Manages client relationships and drives trading and export partnerships for recovered materials.",
     tier: 2,
@@ -182,6 +182,40 @@ function OrbitNode({ m, rPercent }: { m: Member; rPercent: number }) {
   );
 }
 
+function OurTeamBackdrop() {
+  return (
+    <svg
+      className="absolute inset-0 h-full w-full pointer-events-none"
+      viewBox="0 0 1440 700"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        <pattern id="communityGrid" width="56" height="56" patternUnits="userSpaceOnUse">
+          <path d="M 56 0 L 0 0 0 56" fill="none" stroke="rgba(11,61,46,0.035)" strokeWidth="1" />
+        </pattern>
+      </defs>
+      <rect width="1440" height="700" fill="url(#communityGrid)" />
+
+      <polygon
+        points="1300,60 1348,87 1348,140 1300,167 1252,140 1252,87"
+        fill="none"
+        stroke="rgba(249,168,38,0.18)"
+        strokeWidth="2"
+      />
+      <circle
+        cx="140"
+        cy="560"
+        r="130"
+        fill="none"
+        stroke="rgba(27,107,27,0.1)"
+        strokeWidth="1"
+      />
+    </svg>
+  );
+}
+
+
 export default function OurTeam() {
   const ceo = team.find((m) => m.tier === 0)!;
   const manager = team.find((m) => m.tier === 1)!;
@@ -189,6 +223,7 @@ export default function OurTeam() {
 
   return (
     <section className="bg-white">
+    <OurTeamBackdrop />
       <Container className="py-16 md:py-24">
         <div className="text-center">
           <div className="text-[11px] font-semibold tracking-wide" style={{ color: GREEN }}>

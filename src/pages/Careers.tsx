@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import Container from "../components/ui/Container";
 import SectionTitle from "../components/ui/SectionTitle";
 import Button from "../components/ui/Button";
+import SectionBackdrop from "../components/ui/SectionBackdrop";
 import { site } from "../data/site";
 
 const roles = [
@@ -17,8 +18,9 @@ export default function Careers() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-      <section className="bg-slate-50 border-b border-slate-100">
-        <Container className="py-12">
+      <section className="relative overflow-hidden bg-slate-50 border-b border-slate-100">
+        <SectionBackdrop />
+        <Container className="relative py-12">
           <h1 className="text-3xl font-semibold">Careers</h1>
           <p className="mt-3 text-slate-600">Join the team (placeholder listings for the clone).</p>
         </Container>

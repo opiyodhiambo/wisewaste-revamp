@@ -14,7 +14,7 @@ export default function WhatsAppFloat() {
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
       className="
-        fixed bottom-6 left-6 z-40
+        fixed bottom-6 right-6 z-40
         h-14 w-14
         rounded-full
         bg-[#25D366]
