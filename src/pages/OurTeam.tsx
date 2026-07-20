@@ -225,31 +225,120 @@ export default function OurTeam() {
     <section className="bg-white">
     <OurTeamBackdrop />
       <Container className="py-16 md:py-24">
-        <div className="text-center">
-          <div className="text-[11px] font-semibold tracking-wide" style={{ color: GREEN }}>
-            Meet The People Behind The Recovery
-          </div>
-          <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold" style={{ color: DARK }}>
-            Our Team
-          </h1>
-          <p className="mt-4 max-w-xl mx-auto text-sm leading-relaxed" style={{ color: ORANGE }}>
-            Behind every successful waste collection, recycling initiative, and environmental project is a
-            dedicated team committed to delivering reliable, sustainable, and customer focused services.
-            Our professionals bring together expertise in operations, environmental management, logistics,
-            and customer service to ensure every project is handled safely, efficiently, and responsibly.
-            </p>
+  <div className="text-center">
+    <div
+      className="text-[11px] font-semibold tracking-wide uppercase"
+      style={{ color: GREEN }}
+    >
+      Meet The People Behind The Recovery
+    </div>
+
+    <h1
+      className="mt-3 text-3xl sm:text-4xl font-extrabold"
+      style={{ color: DARK }}
+    >
+      Our Team
+    </h1>
+
+    <p
+      className="mt-5 max-w-3xl mx-auto text-base leading-8 text-slate-600"
+    >
+      Behind every successful waste collection, recycling initiative, and
+      environmental project is a dedicated team committed to delivering
+      reliable, sustainable, and customer focused services. Our professionals
+      combine expertise in operations, environmental management, logistics,
+      compliance, and customer service to ensure every project is executed
+      safely, efficiently, and responsibly.
+    </p>
+  </div>
+
+  {/* Leadership Message */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+    className="mt-14 max-w-4xl mx-auto rounded-xl border border-slate-200 bg-slate-50 p-8 text-center"
+  >
+    <h2
+      className="text-xl font-bold"
+      style={{ color: DARK }}
+    >
+      Leadership Message
+    </h2>
+
+    <p className="mt-4 leading-8 text-slate-600">
+      At Wisewaste, our people are our greatest asset. Our experienced
+      operations, logistics, and environmental professionals work every day to
+      deliver reliable, compliant, and environmentally responsible waste
+      management solutions across Kenya. Through teamwork, innovation, and a
+      commitment to sustainability, we continue to help businesses,
+      institutions, and communities create a cleaner and healthier future.
+    </p>
+  </motion.div>
+
+  {/* Company Scale */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6, delay: 0.1 }}
+    className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5"
+  >
+    {[
+      {
+        value: "10+",
+        label: "Dedicated Staff",
+      },
+      {
+        value: "2",
+        label: "Collection Trucks",
+      },
+      {
+        value: "1,000+",
+        label: "Collections Completed",
+      },
+      {
+        value: "100%",
+        label: "NEMA Compliant Operations",
+      },
+      {
+        value: "4 Counties",
+        label: "Nairobi, Kiambu, Kajiado & Machakos",
+      },
+    ].map((item) => (
+      <div
+        key={item.label}
+        className="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+      >
+        <div
+          className="text-3xl font-extrabold"
+          style={{ color: GREEN }}
+        >
+          {item.value}
         </div>
 
-        {/* DESKTOP / TABLET: orbital hierarchy */}
-        <div className="hidden md:block mt-16">
-          <div className="relative aspect-square w-full max-w-[560px] mx-auto">
-            <OrbitRings />
-            <OrgLines />
-            {team.map((m) => (
-              <OrbitNode key={m.name} m={m} rPercent={m.tier === 1 ? 22 : 38} />
-            ))}
-          </div>
+        <div className="mt-2 text-sm font-medium text-slate-600 leading-6">
+          {item.label}
         </div>
+      </div>
+    ))}
+  </motion.div>
+
+  {/* DESKTOP / TABLET */}
+  <div className="hidden md:block mt-20">
+    <div className="relative aspect-square w-full max-w-[560px] mx-auto">
+      <OrbitRings />
+      <OrgLines />
+      {team.map((m) => (
+        <OrbitNode
+          key={m.name}
+          m={m}
+          rPercent={m.tier === 1 ? 22 : 38}
+        />
+      ))}
+    </div>
+  </div>
 
         {/* MOBILE: vertical hierarchy stack */}
         <div className="md:hidden mt-12 flex flex-col items-center">
