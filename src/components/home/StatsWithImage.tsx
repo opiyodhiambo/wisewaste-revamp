@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import Container from "../ui/Container";
-import { Gem, Cpu, BadgeCheck, Globe2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Gem, Cpu, BadgeCheck, Globe2, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
 
 import vehicle10 from "../../assets/vehicle10.jpeg";
@@ -351,6 +352,60 @@ export default function StatsWithImage() {
             />
           </motion.div>
         </div>
+                {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.6, ease: EASE_OUT }}
+          className="mt-16 md:mt-20"
+        >
+          <div
+            className="relative overflow-hidden rounded-2xl px-8 py-10 md:px-14 md:py-14 text-center"
+            style={{ backgroundColor: DARK }}
+          >
+            {/* Decorative background */}
+            <div
+              className="absolute -top-16 -right-16 h-48 w-48 rounded-full opacity-10"
+              style={{ backgroundColor: GOLD }}
+            />
+            <div
+              className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full opacity-10"
+              style={{ backgroundColor: GREEN }}
+            />
+
+            <div className="relative max-w-3xl mx-auto">
+              <div
+                className="text-xs font-bold uppercase tracking-[0.2em]"
+                style={{ color: GOLD }}
+              >
+                Let's Work Together
+              </div>
+
+              <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                Ready to work with Kenya's trusted waste management professionals?
+              </h3>
+
+              <p className="mt-5 text-white/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+                Contact Wisewaste today for a customized waste collection,
+                recycling, or environmental management solution tailored to
+                your home, business, institution, or industrial operation.
+              </p>
+
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-3 mt-8 rounded-full px-8 py-4 font-bold text-lg transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: GOLD,
+                  color: DARK,
+                }}
+              >
+                Contact Us Today
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+          </div>
+        </motion.div>
       </Container>
     </section>
   );
