@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Container from "../ui/Container";
-import { ArrowUpRight, ArrowRight, ChevronLeft,  ChevronRight} from "lucide-react";
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   ShieldCheck,
   BadgeDollarSign,
@@ -8,58 +8,62 @@ import {
   Leaf,
   BadgeCheck,
   Recycle,
+  Award,
+  Truck,
+  HardHat,
+  FileCheck,
+  Clock,
 } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 
-import bin from "../../assets/bins.png"
-import ewaste from "../../assets/ewaste.png"
-import manure from "../../assets/manure.png"
-import green_energy from "../../assets/people.png"
+import bin from "../../assets/bins.png";
+import ewaste from "../../assets/ewaste.png";
+import manure from "../../assets/manure.png";
+import green_energy from "../../assets/people.png";
 import vehicle14 from "../../assets/vehicle14.jpeg";
 import { useEffect, useState } from "react";
 
 const GOLD = "#B38C00";
-
-
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+// Updated top items with specific compliance and operational icons
 const topItems = [
-  { title: "Reliable &\nTrustworthy", icon: ShieldCheck },
-  { title: "Efficient\n& Low Cost", icon: BadgeDollarSign },
-  { title: "Ensure\nSatisfaction", icon: ThumbsUp },
-  { title: "Green\nEconomy", icon: Leaf },
-  { title: "Certified\nRecovery\nExperts", icon: BadgeCheck },
-  { title: "Sustainable\nRecovery", icon: Recycle },
+  { title: "NEMA\nCertified", icon: BadgeCheck },
+  { title: "OSHA Trained\nPersonnel", icon: HardHat },
+  { title: "Fleet Mgmt\nExcellence", icon: Truck },
+  { title: "Environmental\nExpertise", icon: Leaf },
+  { title: "10+ Years\nOperations", icon: Clock },
+  { title: "100% Compliant\nRecovery", icon: ShieldCheck },
 ];
 
 const cards = [
   {
     title: "Garbage Collection & Sorting",
-    desc: "Scheduled residential, commercial and industrial waste collection with efficient sorting to maximize material recovery.",
+    desc: "Fully NEMA-compliant scheduled collection for residential, commercial, and industrial facilities. Operated by OSHA-certified crews and managed with advanced fleet logistics.",
     to: "/services/garbage-collection",
     image: bin,
   },
   {
     title: "Plastic, Metal & E-Waste Recycling",
-    desc: "Recovering valuable plastics, metals and electronic waste through environmentally responsible recycling processes.",
+    desc: "Safe recovery and processing of hazardous e-waste, plastics, and metals adherence to national environmental standards and safe material handling protocols.",
     to: "/services/recycling/plastic-recycling",
     image: ewaste,
   },
   {
     title: "Compost Manure Production",
-    desc: "Organic waste is transformed into nutrient rich compost that supports sustainable agriculture and healthier soils.",
+    desc: "Organic waste recovery driven by deep environmental expertise—converting municipal waste into high-grade compost while meeting agricultural and safety regulations.",
     to: "/services/compost-manure",
     image: manure,
   },
   {
     title: "Green Energy Solutions",
-    desc: "Converting organic waste into renewable energy sources that reduce landfill dependence while supporting a cleaner future.",
+    desc: "Transforming organic byproduct into renewable energy through regulated, eco-friendly processes designed to minimize carbon output and reduce landfill load.",
     to: "/services/green-energy",
     image: green_energy,
   },
   {
     title: "Trading & Export",
-    desc: "Recovered materials are processed to international standards and supplied to local and global recycling markets.",
+    desc: "Export-grade processing backed by full regulatory documentation, international chain-of-custody compliance, and strict quality control.",
     to: "/services/export",
     image: vehicle14,
   },
@@ -148,15 +152,12 @@ export default function SpecialtyAreasBand() {
     return () => clearInterval(timer);
   }, []);
 
-  const prev = () =>
-    setActive((i) => (i - 1 + cards.length) % cards.length);
-
-  const next = () =>
-    setActive((i) => (i + 1) % cards.length);
+  const prev = () => setActive((i) => (i - 1 + cards.length) % cards.length);
+  const next = () => setActive((i) => (i + 1) % cards.length);
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Gold background, same color as before */}
+      {/* Gold background */}
       <div className="absolute inset-0" style={{ backgroundColor: GOLD }} />
 
       {/* SVG texture layer */}
@@ -173,13 +174,13 @@ export default function SpecialtyAreasBand() {
       </div>
 
       <Container className="relative pt-10 md:pt-12 pb-16 md:pb-24">
-        {/* Top icon row */}
+        {/* Top icon row with Compliance Focus */}
         <motion.div
           variants={containerV}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="flex flex-wrap items-start justify-center lg:justify-between gap-x-10 gap-y-6 text-white"
+          className="flex flex-wrap items-start justify-center lg:justify-between gap-x-8 gap-y-6 text-white"
         >
           {topItems.map((x) => {
             const Icon = x.icon;
@@ -191,16 +192,42 @@ export default function SpecialtyAreasBand() {
                 transition={{ type: "spring", stiffness: 320, damping: 20 }}
                 className="flex items-start gap-3 min-w-[140px] cursor-default"
               >
-                <div className="h-11 w-11 bg-white/10 flex items-center justify-center">
+                <div className="h-11 w-11 bg-white/10 flex items-center justify-center rounded-sm">
                   <Icon aria-hidden size={22} className="text-white" />
                 </div>
 
-                <div className="font-semibold leading-tight whitespace-pre-line">
+                <div className="font-semibold leading-tight text-sm md:text-base whitespace-pre-line">
                   {x.title}
                 </div>
               </motion.div>
             );
           })}
+        </motion.div>
+
+        {/* Dynamic Compliance Pill / Trust Anchor */}
+        <motion.div
+          variants={containerV}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mt-8 flex justify-center"
+        >
+          <motion.div
+            variants={itemV}
+            className="inline-flex flex-wrap items-center justify-center gap-3 md:gap-6 bg-black/15 backdrop-blur-md px-6 py-2.5 rounded-full text-white/95 text-xs md:text-sm font-medium border border-white/20"
+          >
+            <span className="flex items-center gap-1.5 font-bold">
+              <FileCheck size={16} className="text-emerald-300" /> NEMA Licensed
+            </span>
+            <span className="hidden sm:inline opacity-40">|</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <HardHat size={16} className="text-amber-300" /> Occupational Safety Certified
+            </span>
+            <span className="hidden sm:inline opacity-40">|</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <Truck size={16} className="text-sky-300" /> Fleet Tracking Managed
+            </span>
+          </motion.div>
         </motion.div>
 
         {/* Cards */}
@@ -209,7 +236,7 @@ export default function SpecialtyAreasBand() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          className="relative mt-10 md:mt-12"
+          className="relative mt-8 md:mt-10"
         >
           {/* Navigation */}
           <button
@@ -238,10 +265,7 @@ export default function SpecialtyAreasBand() {
               className="flex"
             >
               {cards.map((c) => (
-                <div
-                  key={c.title}
-                  className="min-w-full flex justify-center"
-                >
+                <div key={c.title} className="min-w-full flex justify-center">
                   <motion.div
                     whileHover={{ y: -8 }}
                     transition={{
@@ -282,7 +306,6 @@ export default function SpecialtyAreasBand() {
                             className="inline-flex items-center gap-2 text-sm font-extrabold text-[#1B6B1B] hover:text-[#F9A826] transition"
                           >
                             Explore More
-
                             <ArrowRight
                               size={18}
                               className="transition-transform group-hover:translate-x-1"
@@ -314,7 +337,7 @@ export default function SpecialtyAreasBand() {
           </div>
         </motion.div>
 
-        {/* Bottom paragraph + link */}
+        {/* Bottom paragraph + link updated with regulatory focus */}
         <motion.div
           variants={containerV}
           initial="hidden"
@@ -326,10 +349,7 @@ export default function SpecialtyAreasBand() {
             variants={itemV}
             className="text-sm md:text-base font-semibold leading-relaxed"
           >
-            Our operations span collection and sorting, e-waste, plastic and metal
-            recycling, green energy generation, green manure, and the trading and
-            export of recovered materials. Every stream is tailored for commercial,
-            organizational, and residential clients alike.
+            Backed by over a decade of operational excellence, our fleet and certified personnel ensure full NEMA compliance and strict occupational health and safety standards. From collection and e-waste handling to green energy and international material export, every operation is tailored for commercial and industrial clients alike.
           </motion.p>
 
           <motion.div variants={itemV} className="mt-4">
@@ -364,3 +384,4 @@ export default function SpecialtyAreasBand() {
     </section>
   );
 }
+
