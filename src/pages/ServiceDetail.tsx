@@ -23,8 +23,6 @@ import { site } from "../data/site";
 import KeyBenefits from "../components/services/KeyBenefits";
 
 const GREEN = "#1B6B1B";
-const ORANGE = "#F9A826";
-const DARK = "#0B3D2E";
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const fadeUp: Variants = {
